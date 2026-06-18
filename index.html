@@ -1,455 +1,73 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Agency // Скоро открытие</title>
-    <style>
-        /* --- RESET & VARIABLES --- */
-        :root {
-            --bg-dark: #0a0a0c;
-            --text-main: #f3f4f6;
-            --text-muted: #8e929b;
-            --accent: #6366f1;
-            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            font-family: var(--font-sans);
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* --- BACKGROUND ANIMATION --- */
-        .bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .blur-glow {
-            position: fixed;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(168, 85, 247, 0.05) 50%, transparent 100%);
-            top: -200px;
-            right: -200px;
-            z-index: 1;
-            filter: blur(80px);
-            animation: floatGlow 20s infinite alternate ease-in-out;
-        }
-
-        @keyframes floatGlow {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(-100px, 100px) scale(1.2); }
-        }
-
-        /* --- LAYOUT & STRUCTURE (Using Native Nesting) --- */
-        .app-container {
-            position: relative;
-            z-index: 2;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-
-            header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 1rem 0;
-
-                .logo {
-                    font-size: 1.25rem;
-                    font-weight: 800;
-                    letter-spacing: -0.05em;
-                    background: var(--accent-gradient);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                    text-transform: uppercase;
-                }
-
-                .status-badge {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.5rem;
-                    background: var(--glass-bg);
-                    border: 1px solid var(--glass-border);
-                    padding: 0.5rem 1rem;
-                    border-radius: 100px;
-                    font-size: 0.85rem;
-                    backdrop-filter: blur(12px);
-
-                    .pulse-dot {
-                        width: 8px;
-                        height: 8px;
-                        background-color: #22c55e;
-                        border-radius: 50%;
-                        box-shadow: 0 0 12px #22c55e;
-                        animation: pulse 2s infinite;
-                    }
-                }
-            }
-
-            main {
-                flex: 1;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 4rem 0;
-            }
-
-            footer {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 1.5rem 0;
-                border-top: 1px solid var(--glass-border);
-                font-size: 0.85rem;
-                color: var(--text-muted);
-
-                .socials {
-                    display: flex;
-                    gap: 1.5rem;
-
-                    a {
-                        color: var(--text-muted);
-                        text-decoration: none;
-                        transition: color 0.3s ease, transform 0.3s ease;
-                        display: inline-block;
-
-                        &:hover {
-                            color: var(--text-main);
-                            transform: translateY(-2px);
-                        }
-                    }
-                }
-            }
-        }
-
-        /* --- HERO CONTENT --- */
-        .hero {
-            max-width: 800px;
-            text-align: center;
-
-            .tagline {
-                font-size: 0.9rem;
-                text-transform: uppercase;
-                letter-spacing: 0.2em;
-                color: var(--accent);
-                margin-bottom: 1.5rem;
-                font-weight: 600;
-            }
-
-            h1 {
-                font-size: clamp(2.5rem, 6vw, 4.5rem);
-                font-weight: 800;
-                line-height: 1.1;
-                letter-spacing: -0.03em;
-                margin-bottom: 1.5rem;
-
-                span {
-                    background: var(--accent-gradient);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                }
-            }
-
-            .description {
-                font-size: clamp(1.1rem, 2vw, 1.25rem);
-                color: var(--text-muted);
-                line-height: 1.6;
-                margin-bottom: 3rem;
-                max-width: 600px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-        }
-
-        /* --- NOTIFY FORM (Pure Clean Code) --- */
-        .cta-form {
-            display: flex;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            padding: 0.5rem;
-            border-radius: 16px;
-            max-width: 500px;
-            margin: 0 auto;
-            backdrop-filter: blur(20px);
-            transition: border-color 0.4s ease, box-shadow 0.4s ease;
-
-            &:focus-within {
-                border-color: rgba(99, 102, 241, 0.4);
-                box-shadow: 0 0 30px rgba(99, 102, 241, 0.1);
-            }
-
-            input[type="email"] {
-                flex: 1;
-                background: transparent;
-                border: none;
-                outline: none;
-                padding: 1rem 1.5rem;
-                color: var(--text-main);
-                font-family: inherit;
-                font-size: 1rem;
-
-                &::placeholder {
-                    color: rgba(255, 255, 255, 0.3);
-                }
-            }
-
-            button {
-                background: var(--text-main);
-                color: var(--bg-dark);
-                border: none;
-                outline: none;
-                padding: 1rem 2rem;
-                border-radius: 12px;
-                font-weight: 600;
-                font-size: 0.95rem;
-                cursor: pointer;
-                transition: background-color 0.3s ease, transform 0.2s ease;
-
-                &:hover {
-                    background-color: #ffffff;
-                }
-
-                &:active {
-                    transform: scale(0.98);
-                }
-            }
-        }
-
-        /* --- ANIMATIONS & STATES --- */
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.5; }
-        }
-
-        /* Reveal Animation on Load */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-            
-            &.active {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .delay-1 { transition-delay: 0.2s; }
-        .delay-2 { transition-delay: 0.4s; }
-
-        /* --- RESPONSIVE DESIGN --- */
-        @media (max-width: 640px) {
-            .app-container {
-                padding: 1.5rem;
-                
-                footer {
-                    flex-direction: column;
-                    gap: 1.5rem;
-                    text-align: center;
-                }
-            }
-
-            .cta-form {
-                flex-direction: column;
-                background: transparent;
-                border: none;
-                padding: 0;
-                gap: 1rem;
-                backdrop-filter: none;
-
-                input[type="email"] {
-                    background: var(--glass-bg);
-                    border: 1px solid var(--glass-border);
-                    border-radius: 14px;
-                    width: 100%;
-                    backdrop-filter: blur(20px);
-                }
-
-                button {
-                    width: 100%;
-                    padding: 1.2rem;
-                    border-radius: 14px;
-                }
-            }
-        }
-    </style>
+    <title>AURA // Premium Digital Experience</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'%3E%3Cpath d='M50 15L85 75H15L50 15Z' stroke='%23e5c158' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='50' cy='52' r='10' fill='%23ffffff'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
 
-    <canvas id="particles" class="bg-canvas"></canvas>
-    <div class="blur-glow"></div>
+    <svg class="noise-overlay" xmlns="http://www.w3.org/2000/svg">
+        <filter id="grain">
+            <feTurbulence type="fractalNoise" baseFrequency="0.80" numOctaves="3" stitchTiles="stitch"/>
+            <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.07 0"/>
+        </filter>
+        <rect width="100%" height="100%" filter="url(#grain)"/>
+    </svg>
+
+    <div class="ambient-glow" id="ambientGlow"></div>
+    <div class="grid-overlay" id="gridOverlay"></div>
 
     <div class="app-container">
         
         <header>
-            <div class="logo">Aura.Studio</div>
-            <div class="status-badge">
-                <div class="pulse-dot"></div>
-                <span>Production 2026</span>
+            <div class="logo-container">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ffffff"/>
+                            <stop offset="100%" stop-color="#e5c158"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M50 15L85 75H15L50 15Z" stroke="url(#logoGrad)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="50" cy="52" r="10" fill="url(#logoGrad)"/>
+                </svg>
+                <span>Aura</span>
             </div>
+            <div class="sys-tracker" id="sysTracker">SYS_LOC: 0.0000 // 0.0000</div>
         </header>
 
-        <main>
-            <section class="hero">
-                <div class="tagline reveal">Next-Gen Digital Experience</div>
-                <h1 class="reveal delay-1">Создаем цифровое <span>будущее</span>, которое вдохновляет.</h1>
-                <p class="reveal delay-1 description">
-                    Мы полностью переосмысляем подход к разработке интерфейсов. Наш новый сайт находится в процессе сборки. Оставьте email, чтобы первыми получить инвайт.
-                </p>
-                
-                <div class="reveal delay-2">
-                    <form class="cta-form" id="notifyForm" action="#" method="POST">
-                        <input type="email" placeholder="Ваш email" required autocomplete="off">
-                        <button type="submit">Уведомить меня</button>
-                    </form>
-                </div>
-            </section>
+        <main id="mainContent">
+            <span class="badge">Ecosystem Synthesis 2026</span>
+            <h1>The new standard <br>for digital products.</h1>
+            <p>We architect complex interfaces and immersive web platforms at the intersection of pure engineering and cinematic art. The next iteration is unfolding.</p>
+            
+            <div class="subscription-wrapper">
+                <form class="subscription-form" id="inviteForm" autocomplete="off">
+                    <input type="email" id="emailInput" placeholder="Enter your email" required aria-label="Email Address">
+                    <div class="magnetic-wrap" id="magneticButtonWrap">
+                        <button type="submit" id="magneticButton">Request Access</button>
+                    </div>
+                </form>
+            </div>
         </main>
 
         <footer>
-            <div>&copy; 2026 Aura.Studio. Все права защищены.</div>
+            <div class="copyright">&copy; 2026 Aura Laboratory. Coded with pure intent.</div>
             <div class="socials">
                 <a href="#0">Telegram</a>
                 <a href="#0">GitHub</a>
-                <a href="#0">Behance</a>
+                <a href="#0">LinkedIn</a>
             </div>
         </footer>
+
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            // 1. Плавное появление элементов (Reveal Animation)
-            const reveals = document.querySelectorAll('.reveal');
-            const initReveal = () => {
-                reveals.forEach(el => el.classList.add('active'));
-            };
-            // Запуск с минимальной задержкой для отработки транзишена
-            setTimeout(initReveal, 100);
-
-            // 2. Интерактивный интеллигентный фон на Canvas (микро-партикли)
-            const canvas = document.getElementById('particles');
-            const ctx = canvas.getContext('2d');
-            let particlesArray = [];
-            
-            const properties = {
-                particleColor: 'rgba(255, 255, 255, 0.15)',
-                particleCount: 45,
-                maxVelocity: 0.4,
-                lineLength: 120
-            };
-
-            const resizeCanvas = () => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            };
-
-            window.addEventListener('resize', resizeCanvas);
-            resizeCanvas();
-
-            class Particle {
-                constructor() {
-                    this.x = Math.random() * canvas.width;
-                    this.y = Math.random() * canvas.height;
-                    this.velocityX = (Math.random() * properties.maxVelocity * 2) - properties.maxVelocity;
-                    this.velocityY = (Math.random() * properties.maxVelocity * 2) - properties.maxVelocity;
-                    this.radius = Math.random() * 1.5 + 0.5;
-                }
-
-                update() {
-                    if (this.x + this.radius > canvas.width || this.x - this.radius < 0) this.velocityX = -this.velocityX;
-                    if (this.y + this.radius > canvas.height || this.y - this.radius < 0) this.velocityY = -this.velocityY;
-                    
-                    this.x += this.velocityX;
-                    this.y += this.velocityY;
-                }
-
-                draw() {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = properties.particleColor;
-                    ctx.fill();
-                }
-            }
-
-            const drawLines = (p, array) => {
-                for (let i = array.indexOf(p); i < array.length; i++) {
-                    const nextP = array[i];
-                    const distance = Math.sqrt(Math.pow(p.x - nextP.x, 2) + Math.pow(p.y - nextP.y, 2));
-                    
-                    if (distance < properties.lineLength) {
-                        const opacity = 1 - (distance / properties.lineLength);
-                        ctx.lineWidth = 0.5;
-                        ctx.strokeStyle = `rgba(99, 102, 241, ${opacity * 0.12})`;
-                        ctx.beginPath();
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(nextP.x, nextP.y);
-                        ctx.stroke();
-                    }
-                }
-            };
-
-            const initParticles = () => {
-                particlesArray = [];
-                for (let i = 0; i < properties.particleCount; i++) {
-                    particlesArray.push(new Particle());
-                }
-            };
-
-            const animateParticles = () => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particlesArray.forEach(p => {
-                    p.update();
-                    p.draw();
-                    drawLines(p, particlesArray);
-                });
-                requestAnimationFrame(animateParticles);
-            };
-
-            initParticles();
-            animateParticles();
-
-            // 3. Обработка формы без перезагрузки (UX-премиум класса)
-            const form = document.getElementById('notifyForm');
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const emailInput = form.querySelector('input[type="email"]');
-                const btn = form.querySelector('button');
-
-                if (emailInput.value) {
-                    btn.disabled = true;
-                    btn.innerText = 'Готово';
-                    btn.style.background = 'linear-gradient(135deg, #22c55e 0%, #10b981 100%)';
-                    btn.style.color = '#ffffff';
-                    emailInput.style.opacity = '0.5';
-                    emailInput.disabled = true;
-                }
-            });
-        });
-    </script>
 </body>
 </html>
